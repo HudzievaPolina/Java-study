@@ -1,3 +1,4 @@
+import java.util.Map;
 import java.util.Scanner;
 
 public class Calculator {
@@ -27,52 +28,114 @@ class Numbers {
     Numbers(String[] members) {
         this.a = members[0];
         this.b = members[2];
-        switch (this.a) {
-            case "I":
-                this.x = 1;
-                this.i = 1;
-                break;
-            case "II":
-                this.x = 2;
-                this.i = 1;
-                ;
-                break;
-            case "III":
-                this.x = 3;
-                this.i = 1;
-                ;
-                break;
-            case "IV":
-                this.x = 4;
-                this.i = 1;
-                break;
-            case "V":
-                this.x = 5;
-                this.i = 1;
-                break;
-            case "VI":
-                this.x = 6;
-                this.i = 1;
-                break;
-            case "VII":
-                this.x = 7;
-                this.i = 1;
-                break;
-            case "VIII":
-                this.x = 8;
-                this.i = 1;
-                break;
-            case "IX":
-                this.x = 9;
-                this.i = 1;
-                break;
-            case "X":
-                this.x = 10;
-                this.i = 1;
-                break;
-            default:
-                this.x = Integer.parseInt(a);
+
+        //Словарь значений (некий "справочник", с которым нужно сравнить входное значение)
+        Map<String, Integer> romanIntegers = Map.ofEntries(
+                Map.entry("I", 1),
+                Map.entry("II", 2),
+                Map.entry("III", 3),
+                Map.entry("IV", 4),
+                Map.entry("V", 5),
+                Map.entry("VI", 6),
+                Map.entry("VII", 7),
+                Map.entry("VIII", 8),
+                Map.entry("IX", 9),
+                Map.entry("X", 10)
+        );
+        //ищем в справочнике соответствие, если не нашли, ставим значение по умолчанию -1
+        var romanInt = romanIntegers.getOrDefault(a, -1);
+
+
+        if (romanInt != -1)
+        {
+            //нашли соответствие, ставим i = 1 для каких-то дальнейших вычислений
+            this.x = romanInt;
+            this.i = 1;
         }
+        else
+        {
+            //не нашли соответствие в римских цифрах
+            //пытаемся распарсить, длина слова максимум может быть 2, так как максимальное число на входе 10
+            if (a.length() <= 2)
+            {
+                //разбиваем входное слово на массив из символов
+                var symbolsInWord = a.toCharArray();
+                for (var symbol: symbolsInWord) 
+                {
+                    //проверяем каждый символ, если не число — сразу кидаем исключение, дальше нет смысла вычислять
+                    if (!Character.isDigit(symbol))
+                    {
+                        throw new ArithmeticException("Недопустимые значения операндов");
+                    }
+                }
+
+                //дошли до сюда — значит, двухсимвольное слово это какое-то неотрицательное число (может быть от 00 до 99)
+                //можно смело преобразовать в int
+                this.x = Integer.parseInt(a);
+
+                //проверка на несоответствие ограничениям задачи
+                if (this.x < 1 || this.x > 10)
+                {
+                    //кидаем исключение, дальше нет смысла выислять
+                    throw new ArithmeticException("Недопустимые значения операндов");
+                }
+            }
+            else
+            {
+                //число трёхзначное (слово трёхсимвольное) или больше, кидаем исключение, дальше нет смысла выислять
+                throw new ArithmeticException("Недопустимые значения операндов");
+            }
+        }
+
+
+
+//        switch (this.a) {
+//            case "I":
+//                this.x = 1;
+//                this.i = 1;
+//                break;
+//            case "II":
+//                this.x = 2;
+//                this.i = 1;
+//                ;
+//                break;
+//            case "III":
+//                this.x = 3;
+//                this.i = 1;
+//                ;
+//                break;
+//            case "IV":
+//                this.x = 4;
+//                this.i = 1;
+//                break;
+//            case "V":
+//                this.x = 5;
+//                this.i = 1;
+//                break;
+//            case "VI":
+//                this.x = 6;
+//                this.i = 1;
+//                break;
+//            case "VII":
+//                this.x = 7;
+//                this.i = 1;
+//                break;
+//            case "VIII":
+//                this.x = 8;
+//                this.i = 1;
+//                break;
+//            case "IX":
+//                this.x = 9;
+//                this.i = 1;
+//                break;
+//            case "X":
+//                this.x = 10;
+//                this.i = 1;
+//                break;
+//            default:
+//                this.x = Integer.parseInt(a);
+//        }
+
         switch (this.b) {
             case "I":
                 this.y = 1;
